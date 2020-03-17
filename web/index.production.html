@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+	<head>
+    <title>File Storage Service</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script>
+      (function(precacheKey) {
+        if (navigator.serviceWorker) {
+          const key = localStorage.getItem(precacheKey);
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            // registration worked
+            const hash = window.__SOURCE_TREE_HASH__ = '<%- hash %>';
+            if (key !== hash) {
+              registration.addEventListener('updatefound', function() {
+                registration.unregister().then(function(success) {
+                  if (success) {
+                    if (typeof caches === 'object') {
+                      caches.keys().then(function(keys) {
+                        return Promise.all(keys.map(function(key) {
+                          return caches.delete(key);
+                        }));
+                      })
+                    }
+                  }
+                });
+              });
+              function update() {
+                registration.update().catch(function(e) {
+                  setTimeout(update, 10);
+                }) 
+              }
+              update();
+            }
+          }).catch(function(error) {
+            // registration failed
+            console.log('Registration failed with ' + error);
+          });
+        }
+      })('sw-precache-hash-value');
+    </script>
+    <link rel="preload" href="/app.js" as="script">
+    <link rel="preload" href="/vendor.production.dll.js" as="script">
+	</head>
+	<body>
+		<div id="app"></div>
+    <script type="text/javascript" src="/vendor.production.dll.js"></script>
+		<script type="text/javascript" src="/app.js"></script>
+	</body>
+</html>

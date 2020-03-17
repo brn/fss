@@ -1,0 +1,19 @@
+{
+  "name": "fss",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:brn/fss",
+  "author": "Taketoshi Aono <brn@b6n.ch>",
+  "license": "MIT",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-testcafe": "^0.2.1",
+    "prettier": "^1.19.1"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "assets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/build-icon"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "icon.font": "^1.1.1"
+  }
+}

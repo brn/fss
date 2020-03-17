@@ -1,0 +1,2 @@
+pub const MAX_FILE_SIZE: u64 = 10737418240;
+pub const MAX_LIST_COUNT: i64 = 100000;

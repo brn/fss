@@ -1,0 +1,7 @@
+CREATE TABLE `files` (
+  `id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(500) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB;

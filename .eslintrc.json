@@ -1,0 +1,70 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "overrides": [
+    {
+      "files": "**/*.ts",
+      "extends": [
+        "google",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "prettier/@typescript-eslint"
+      ],
+      "plugins": ["@typescript-eslint"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 2019,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "new-cap": 0,
+        "@typescript-eslint/no-empty-function": 0
+      }
+    },
+    {
+      "files": "**/*.tsx",
+      "extends": [
+        "google",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "plugin:react/recommended",
+        "prettier/@typescript-eslint"
+      ],
+      "plugins": ["@typescript-eslint"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 2019,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "new-cap": 0,
+        "react/display-name": 0,
+        "@typescript-eslint/no-empty-function": 0
+      }
+    },
+    {
+      "files": "**/*.js",
+      "extends": [
+        "google",
+        "plugin:prettier/recommended",
+        "plugin:react/recommended"
+      ],
+      "parserOptions": {
+        "ecmaVersion": 2019
+      },
+      "rules": {
+        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "new-cap": 0,
+        "react/display-name": 0
+      }
+    }
+  ]
+}

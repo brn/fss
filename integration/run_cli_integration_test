@@ -1,0 +1,154 @@
+#!/bin/sh
+cd `dirname $0`
+
+function init() {
+  sh ./bulkupload_for_test.sh 10
+}
+
+function list_limit1() {
+  local readonly EXPECTED_TABLE="+------+----------+---------------------+
+|   id | name     | created_at          |
++======+==========+=====================+
+|   10 | dummy_10 | 2020-01-01T00:00:00 |
++------+----------+---------------------+"
+  local readonly EXPECTED_JSON="[{'id': 10, 'name': 'dummy_10', 'created_at': '2020-01-01T00:00:00'}]"
+
+  ## Read Table
+  local readonly RESULT=$(sh ../filestorage list --limit 1)
+  echo $EXPECTED_TABLE | ( echo $RESULT | diff -u /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+
+  ## Read raw
+  local readonly RAW_RESULT=$(sh ../filestorage list --limit 1 --raw)
+  echo $EXPECTED_JSON | ( echo $RAW_RESULT | diff -u /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+}
+
+function list_limit1_offset2() {
+  local readonly EXPECTED_TABLE_1="+------+----------+---------------------+
+|   id | name     | created_at          |
++======+==========+=====================+
+|   10 | dummy_10 | 2020-01-01T00:00:00 |
++------+----------+---------------------+"
+  local readonly EXPECTED_TABLE_2="+------+---------+---------------------+
+|   id | name    | created_at          |
++======+=========+=====================+
+|    9 | dummy_9 | 2020-01-01T00:00:00 |
++------+---------+---------------------+"
+  local readonly EXPECTED_JSON_1="[{'id': 10, 'name': 'dummy_10', 'created_at': '2020-01-01T00:00:00'}]"
+  local readonly EXPECTED_JSON_2="[{'id': 9, 'name': 'dummy_9', 'created_at': '2020-01-01T00:00:00'}]"
+
+  ## Read Table
+  local readonly RESULT_1=$(sh ../filestorage list --limit 1)
+  echo $EXPECTED_TABLE_1 | ( echo $RESULT_1 | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+
+  local readonly RESULT_2=$(sh ../filestorage list --limit 1 --page 2)
+  echo $EXPECTED_TABLE_2 | ( echo $RESULT_2 | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+
+  ## Read raw
+  local readonly RAW_RESULT_1=$(sh ../filestorage list --limit 1 --raw)
+  echo $EXPECTED_JSON_1 | ( echo $RAW_RESULT_1 | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+
+  local readonly RAW_RESULT_2=$(sh ../filestorage list --limit 1 --raw --page 2)
+  echo $EXPECTED_JSON_2 | ( echo $RAW_RESULT_2 | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+}
+
+function list_limit2() {
+  readonly EXPECTED_TABLE="+------+----------+---------------------+
+|   id | name     | created_at          |
++======+==========+=====================+
+|   10 | dummy_10 | 2020-01-01T00:00:00 |
++------+----------+---------------------+
+|    9 | dummy_9  | 2020-01-01T00:00:00 |
++------+----------+---------------------+"
+  local readonly EXPECTED_JSON="[{'id': 10, 'name': 'dummy_10', 'created_at': '2020-01-01T00:00:00'}, {'id': 9, 'name': 'dummy_9', 'created_at': '2020-01-01T00:00:00'}]"
+
+  ## Read Table
+  local readonly RESULT=$(sh ../filestorage list --limit 2)
+  echo $EXPECTED_TABLE | ( echo $RESULT | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+
+  ## Read raw
+  local readonly RAW_RESULT=$(sh ../filestorage list --limit 2 --raw)
+  echo $EXPECTED_JSON | ( echo $RAW_RESULT | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    exit 1;
+  fi
+}
+
+function get() {
+  ../filestorage get --id 10
+  local readonly RESULT=$(cat ../dummy_10)
+  echo "file_10" | ( echo $RESULT | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    rm -rf ../dummy_10
+    exit 1;
+  fi
+  rm -rf ../dummy_10
+}
+
+function get_outdir() {
+  ../filestorage get --id 10 --outdir ./integration/__it__
+  local readonly RESULT=$(cat ./__it__/dummy_10)
+  echo "file_10" | ( echo $RESULT | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    rm -rf ./__it__
+    exit 1;
+  fi
+  rm -rf ./__it__
+}
+
+function upload() {
+  local readonly FILENAME=dummy_file
+  ../filestorage upload --file ./integration/data/$FILENAME > /dev/null
+  ../filestorage get --id 11 --outdir ./integration/__it__
+  cat data/$FILENAME | ( cat __it__/$FILENAME | diff /dev/fd/3 -) 3<&0
+  if [ $? != 0 ];then
+    echo "$FUNCNAME"
+    rm -rf ./integration/__it__
+    exit 1;
+  fi
+  rm -rf ./integration/__it__
+}
+
+function delete() {
+  ../filestorage delete --id 11
+}
+
+init &&\
+  list_limit1 &&\
+  list_limit1_offset2 &&\
+  list_limit2 &&\
+  get &&\
+  get_outdir &&\
+  upload &&\
+  delete &&\
+  echo "Passed"

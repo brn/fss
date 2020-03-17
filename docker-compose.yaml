@@ -1,0 +1,70 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: ./api
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 8181:80
+    volumes:
+      - storage:/usr/local/data/storage
+      - ./infra:/usr/local/infra
+    environment:
+      - RUST_LOG=debug
+      - APP_URL=0.0.0.0:80
+      - STORAGE_PATH=/usr/local/data/storage
+      - MYSQL_HOST=db
+      - MYSQL_USER=user
+      - MYSQL_DB=file_storage
+      - MYSQL_PASSWORD=password
+    depends_on:
+      - db
+      - db-migration
+      - web
+      - storage
+  db:
+    build:
+      context: ./
+      dockerfile: ./infra/docker/mysql/Dockerfile
+    volumes:
+      - ./infra/docker/mysql/my.conf:/etc/mysql/conf.d/docker.cnf
+      - db-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    depends_on:
+      - db-data
+  db-migration:
+    build:
+      context: ./infra
+      dockerfile: ./docker/mysql/Dockerfile.migration
+    volumes:
+      - ./infra/migrations:/usr/local/migrations
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=user
+      - MYSQL_DB=file_storage
+      - MYSQL_PASSWORD=password
+    depends_on:
+      - db
+  web:
+    build:
+      context: ./web
+      dockerfile: ./docker/Dockerfile
+      args:
+        api_server_url: http://localhost:8181
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+  storage:
+    build:
+      context: ./infra
+      dockerfile: ./docker/storage/Dockerfile
+  db-data:
+    build:
+      context: ./infra
+      dockerfile: ./docker/data/Dockerfile
+
+volumes:
+  storage:
+  db-data:

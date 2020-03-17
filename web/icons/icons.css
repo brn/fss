@@ -1,0 +1,16 @@
+@font-face {
+	font-family: "icons";
+	src: url("icons.eot?7f51ea815b35e84f173b7ba6bab59281?#iefix") format("embedded-opentype"),
+url("icons.woff2?7f51ea815b35e84f173b7ba6bab59281") format("woff2"),
+url("icons.woff?7f51ea815b35e84f173b7ba6bab59281") format("woff"),
+url("icons.ttf?7f51ea815b35e84f173b7ba6bab59281") format("truetype"),
+url("icons.svg?7f51ea815b35e84f173b7ba6bab59281#icons") format("svg");
+}
+
+._icon {
+	font-family: icons !important;
+	font-style: normal;
+	font-weight: normal !important;
+	line-height: 1;
+	vertical-align: middle;
+}

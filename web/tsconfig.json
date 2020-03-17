@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": false,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "jsx": "React",
+    "module": "es2015",
+    "baseUrl": "./",
+    "importHelpers": true,
+    "sourceMap": true,
+    "strict": true,
+    "lib": ["dom", "es5", "ES2015", "es2016", "es2017", "es2018", "es2019"],
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
+    ]
+  },
+  "exclude": ["node_modules", "src/**/flycheck_*"]
+}

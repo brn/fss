@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd $(dirname $0);
+
+./run_cli_integration_test && ./run_web_e2e_test

@@ -1,0 +1,25 @@
+[tasks.TEST]
+description = "Test"
+script = ['''
+#!/usr/bin/env bash
+docker build -t fss_test_mysql -f docker/Dockerfile.test .
+docker run -p 3306:3306 --name fss_test_mysql --rm -d -it fss_test_mysql
+sleep 20
+
+mkdir ./.test;
+
+for i in {0..50}; do
+  mkdir -p ./.test/db${i}
+  mysql -uroot -proot -h 127.0.0.1 -e "CREATE DATABASE db${i}" > /dev/null 2>&1
+  for j in {1..6}; do
+    echo "test${j}" > ./.test/db${i}/${j}
+  done
+  diesel migration run --migration-dir ../infra/migrations --database-url "mysql://root:root@127.0.0.1:3306/db${i}"
+done
+
+RUST_LOG=debug
+cargo test -- --nocapture
+
+docker kill $(docker ps --filter name=fss_test_mysql -q)
+rm -r ./.test
+''']

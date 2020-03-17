@@ -1,0 +1,10 @@
+#!/bin/sh
+
+function run() {
+  sh ./bulkupload_for_test.sh 300 &&
+    npx testcafe $1 src/index.ts
+}
+
+run chrome:headless &&\
+  run firefox:headless &&\
+  run safari

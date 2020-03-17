@@ -1,0 +1,20 @@
+{
+  "name": "integration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./run_web_e2e_test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "testcafe": "^1.8.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^2.19.2",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-testcafe": "^0.2.1"
+  }
+}
