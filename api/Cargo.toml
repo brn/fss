@@ -30,7 +30,7 @@ typescript-definitions = { git = "https://github.com/onelson/typescript-definiti
 
 [dev-dependencies]
 bytes = "0.5"
-actix-utils = "1.0.6"
+actix-utils = "3.0.0"
 
 [[bin]]
 name = "dummy"
